@@ -261,6 +261,12 @@
                     <artifactId>jetty-distribution</artifactId>
                     <version>9.2.4.v20141103</version>
                   </artifactInstaller>
+                  <!--dependencies>
+                    <dependency>
+                      <groupId>co.paralleluniverse</groupId>
+                      <artifactId>comsat-jetty-loader</artifactId>
+                    </dependency>
+                  </dependencies-->
                 </container>
               </configuration>
             </plugin>
@@ -271,9 +277,6 @@
 
     <profile>
       <id>jetty8x</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
       <build>
         <pluginManagement>
           <plugins>
@@ -282,12 +285,18 @@
               <artifactId>cargo-maven2-plugin</artifactId>
               <configuration>
                 <container>
-                  <containerId>jetty9x</containerId>
+                  <containerId>jetty8x</containerId>
                   <artifactInstaller>
                     <groupId>org.eclipse.jetty</groupId>
                     <artifactId>jetty-distribution</artifactId>
                     <version>8.1.15.v20140411</version>
                   </artifactInstaller>
+                  <dependencies>
+                    <dependency>
+                      <groupId>co.paralleluniverse</groupId>
+                      <artifactId>comsat-jetty-loader</artifactId>
+                    </dependency>
+                  </dependencies>
                 </container>
               </configuration>
             </plugin>
@@ -310,6 +319,12 @@
                   <zipUrlInstaller>
                     <url>http://archive.apache.org/dist/tomcat/tomcat-8/v8.0.15/bin/apache-tomcat-8.0.15.zip</url>
                   </zipUrlInstaller>
+                  <dependencies>
+                    <dependency>
+                      <groupId>co.paralleluniverse</groupId>
+                      <artifactId>comsat-tomcat-loader</artifactId>
+                    </dependency>
+                  </dependencies>
                 </container>
               </configuration>
             </plugin>
@@ -332,6 +347,12 @@
                   <zipUrlInstaller>
                     <url>http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.56/bin/apache-tomcat-7.0.56.zip</url>
                   </zipUrlInstaller>
+                  <dependencies>
+                    <dependency>
+                      <groupId>co.paralleluniverse</groupId>
+                      <artifactId>comsat-tomcat-loader</artifactId>
+                    </dependency>
+                  </dependencies>
                 </container>
               </configuration>
             </plugin>
