@@ -1,0 +1,12 @@
+<?xml version="1.0"  encoding="ISO-8859-1"?>
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure.dtd">
+<Configure id='ctx' class="org.eclipse.jetty.webapp.WebAppContext">
+    <!--use custom classloader in order to instrument classes by quasar-->
+    <Set name="classLoader">
+        <New class="co.paralleluniverse.comsat.jetty.QuasarWebAppClassLoader">
+            <Arg>
+                <Ref id="ctx"/>
+            </Arg>
+        </New>
+    </Set>
+</Configure>
