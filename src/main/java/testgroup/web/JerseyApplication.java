@@ -10,6 +10,8 @@ import org.glassfish.jersey.server.ResourceConfig;
  */
 public class JerseyApplication extends ResourceConfig {
     public JerseyApplication() {
-        register(JacksonFeature.class); // Support jackson
+        register(new DependencyBinder()); // Support Dependency Injection
+
+        register(JacksonFeature.class);   // Support jackson
     }
 }
