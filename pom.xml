@@ -15,8 +15,27 @@
       <artifactId>quasar-core</artifactId>
       <version>0.6.1</version>
 
-      <!-- Use this for JDK 8 -->
-      <classifier>jdk8</classifier>
+      <!-- Enable this for JDK 8 -->
+      <!-- classifier>jdk8</classifier -->
+    </dependency>
+
+    <dependency>
+      <groupId>co.paralleluniverse</groupId>
+      <artifactId>comsat-jersey-server</artifactId>
+      <version>0.3.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.jersey.media</groupId>
+      <artifactId>jersey-media-json-jackson</artifactId>
+      <version>2.13</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.0.1</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -25,20 +44,34 @@
       <version>0.3.0-SNAPSHOT</version>
       <scope>provided</scope>
 
-      <!-- Use this for JDK 8 -->
-      <classifier>jdk8</classifier>
+      <!-- Enable this for JDK 8 -->
+      <!-- classifier>jdk8</classifier -->
     </dependency>
 
     <dependency>
       <groupId>co.paralleluniverse</groupId>
-      <artifactId>comsat-jersey-server</artifactId>
-      <version>0.2.0</version>
+      <artifactId>comsat-tomcat-loader</artifactId>
+      <version>0.3.0-SNAPSHOT</version>
+      <scope>provided</scope>
+
+      <!-- Enable this for JDK 8 -->
+      <!-- classifier>jdk8</classifier -->
+    </dependency>
+
+    <dependency>
+      <groupId>co.paralleluniverse</groupId>
+      <artifactId>comsat-jetty-loader</artifactId>
+      <version>0.3.0-SNAPSHOT</version>
+      <scope>provided</scope>
+
+      <!-- Enable this for JDK 8 -->
+      <!-- classifier>jdk8</classifier -->
     </dependency>
 
     <dependency>
       <groupId>co.paralleluniverse</groupId>
       <artifactId>comsat-jax-rs-client</artifactId>
-      <version>0.2.0</version>
+      <version>0.3.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 
@@ -47,32 +80,6 @@
       <artifactId>junit</artifactId>
       <version>4.11</version>
       <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>co.paralleluniverse</groupId>
-      <artifactId>comsat-tomcat-loader</artifactId>
-      <version>0.2.0</version>
-      <scope>provided</scope>
-
-      <!-- Use this for JDK 8 -->
-      <classifier>jdk8</classifier>
-    </dependency>
-
-    <dependency>
-      <groupId>co.paralleluniverse</groupId>
-      <artifactId>comsat-jetty-loader</artifactId>
-      <version>0.2.0</version>
-      <scope>provided</scope>
-
-      <!-- Use this for JDK 8 -->
-      <classifier>jdk8</classifier>
-    </dependency>
-
-    <dependency>
-      <groupId>org.glassfish.jersey.media</groupId>
-      <artifactId>jersey-media-json-jackson</artifactId>
-      <version>2.13</version>
     </dependency>
   </dependencies>
 
@@ -223,13 +230,13 @@
                 <properties>
                   <cargo.jvmargs>
                     <!-- Configure memory settings as needed --><!-- -Xmx1000m -->
-                    <!-- Turn off before production --> -Dco.paralleluniverse.fibers.verifyInstrumentation
-                    <!-- Enable if using compile-time (AOT) instrumentation --> -Dco.paralleluniverse.fibers.disableAgentWarning
-                    <!-- Quasar Agent for JDK 7 --> <!-- -javaagent:${co.paralleluniverse:comsat-servlet-container-agent:jar} -->
+                    <!-- Turn off before production and when using AoT --> <!-- -Dco.paralleluniverse.fibers.verifyInstrumentation -->
+                    <!-- Enable if using compile-time (AOT) instrumentation --> <!-- -Dco.paralleluniverse.fibers.disableAgentWarning -->
+                    <!-- Quasar Agent for JDK 7 --> -javaagent:${co.paralleluniverse:comsat-servlet-container-agent:jar}
 
                     <!-- Quasar Agent for JDK 7 with "allow monitors" flag (valid for JDK 8 as well) --><!-- -javaagent:${co.paralleluniverse:quasar-core:jar}=m -->
 
-                    <!-- Quasar Agent for JDK 8 --> -javaagent:${co.paralleluniverse:comsat-servlet-container-agent:jar:jdk8}
+                    <!-- Quasar Agent for JDK 8 --> <!-- -javaagent:${co.paralleluniverse:comsat-servlet-container-agent:jar:jdk8} -->
                   </cargo.jvmargs>
                 </properties>
               </configuration>
@@ -271,17 +278,23 @@
                     <artifactId>jetty-distribution</artifactId>
                     <version>9.2.4.v20141103</version>
                   </artifactInstaller>
-                  <!-- ERROR breaks bootstrap -->
-                  <!--dependencies>
-                    <dependency>
-                      <groupId>co.paralleluniverse</groupId>
-                      <artifactId>comsat-jetty-loader</artifactId-->
-
-                      <!-- Use this for JDK 8 -->
-                      <!-- classifier>jdk8</classifier -->
-                    <!--/dependency>
-                  </dependencies-->
                 </container>
+
+                <!-- Can't use the "dependencies" feature as it will copy into "ext/lib" instead of "lib"
+                     and behaviour is completely different -->
+                <files>
+                  <copy>
+                    <!-- Use this for JDK 7 -->
+                    <file>${co.paralleluniverse:comsat-jetty-loader:jar}</file>
+
+                    <!-- Use this for JDK 8 -->
+                    <!-- file>${co.paralleluniverse:comsat-jetty-loader:jar:jdk8}</file-->
+
+                    <todir>lib</todir>
+                    <configfile>false</configfile>
+                    <overwrite>true</overwrite>
+                  </copy>
+                </files>
               </configuration>
             </plugin>
           </plugins>
@@ -305,17 +318,23 @@
                     <artifactId>jetty-distribution</artifactId>
                     <version>8.1.15.v20140411</version>
                   </artifactInstaller>
-                  <!-- ERROR breaks bootstrap -->
-                  <!--dependencies>
-                    <dependency>
-                      <groupId>co.paralleluniverse</groupId>
-                      <artifactId>comsat-jetty-loader</artifactId-->
-
-                      <!-- Use this for JDK 8 -->
-                      <!-- classifier>jdk8</classifier -->
-                    <!--/dependency>
-                  </dependencies-->
                 </container>
+
+                <!-- Can't use the "dependencies" feature as it will copy into "ext/lib" instead of "lib"
+                     and behaviour is completely different -->
+                <files>
+                  <copy>
+                    <!-- Use this for JDK 7 -->
+                    <file>${co.paralleluniverse:comsat-jetty-loader:jar}</file>
+
+                    <!-- Use this for JDK 8 -->
+                    <!-- file>${co.paralleluniverse:comsat-jetty-loader:jar:jdk8}</file-->
+
+                    <todir>lib</todir>
+                    <configfile>false</configfile>
+                    <overwrite>true</overwrite>
+                  </copy>
+                </files>
               </configuration>
             </plugin>
           </plugins>
@@ -337,15 +356,17 @@
                   <zipUrlInstaller>
                     <url>http://archive.apache.org/dist/tomcat/tomcat-8/v8.0.15/bin/apache-tomcat-8.0.15.zip</url>
                   </zipUrlInstaller>
-                  <!--dependencies>
+                  <dependencies>
+
+                    <!-- Will copy into common/lib, stuff shared by both server and apps -->
                     <dependency>
                       <groupId>co.paralleluniverse</groupId>
-                      <artifactId>comsat-tomcat-loader</artifactId-->
+                      <artifactId>comsat-tomcat-loader</artifactId>
 
-                      <!-- Use this for JDK 8 -->
+                      <!-- Enable this for JDK 8 -->
                       <!-- classifier>jdk8</classifier -->
-                    <!--/dependency>
-                  </dependencies-->
+                    </dependency>
+                  </dependencies>
                 </container>
               </configuration>
             </plugin>
@@ -368,15 +389,17 @@
                   <zipUrlInstaller>
                     <url>http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.56/bin/apache-tomcat-7.0.56.zip</url>
                   </zipUrlInstaller>
-                  <!--dependencies>
+                  <dependencies>
+
+                    <!-- Will copy into common/lib, stuff shared by both server and apps -->
                     <dependency>
                       <groupId>co.paralleluniverse</groupId>
-                      <artifactId>comsat-tomcat-loader</artifactId-->
+                      <artifactId>comsat-tomcat-loader</artifactId>
 
-                    <!-- Use this for JDK 8 -->
-                    <!-- classifier>jdk8</classifier -->
-                    <!--/dependency>
-                  </dependencies-->
+                      <!-- Enable this for JDK 8 -->
+                      <!-- classifier>jdk8</classifier -->
+                    </dependency>
+                  </dependencies>
                 </container>
               </configuration>
             </plugin>
