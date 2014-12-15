@@ -234,7 +234,7 @@
                     <!-- Enable if using compile-time (AOT) instrumentation --> <!-- -Dco.paralleluniverse.fibers.disableAgentWarning -->
                     <!-- Quasar Agent for JDK 7 --> -javaagent:${co.paralleluniverse:comsat-servlet-container-agent:jar}
 
-                    <!-- Quasar Agent for JDK 7 with "allow monitors" flag (valid for JDK 8 as well) --><!-- -javaagent:${co.paralleluniverse:quasar-core:jar}=m -->
+                    <!-- Quasar Agent for JDK 7 with "allow monitors" flag (which is valid for JDK 8 as well) --><!-- -javaagent:${co.paralleluniverse:comsat-servlet-container-agent:jar}=m -->
 
                     <!-- Quasar Agent for JDK 8 --> <!-- -javaagent:${co.paralleluniverse:comsat-servlet-container-agent:jar:jdk8} -->
                   </cargo.jvmargs>
