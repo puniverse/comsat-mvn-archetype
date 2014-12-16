@@ -229,6 +229,7 @@
               <configuration>
                 <properties>
                   <cargo.jvmargs>
+                    <!-- Debug -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -->
                     <!-- Configure memory settings as needed --><!-- -Xmx1000m -->
                     <!-- Turn off before production and when using AoT --> <!-- -Dco.paralleluniverse.fibers.verifyInstrumentation -->
                     <!-- Enable if using compile-time (AOT) instrumentation --> <!-- -Dco.paralleluniverse.fibers.disableAgentWarning -->
