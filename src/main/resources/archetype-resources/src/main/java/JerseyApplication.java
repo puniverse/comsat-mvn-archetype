@@ -1,4 +1,4 @@
-package testgroup.web;
+package ${groupId};
 
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;

@@ -1,4 +1,4 @@
-package testgroup.web;
+package ${groupId};
 
 import javax.xml.bind.annotation.XmlRootElement;
 

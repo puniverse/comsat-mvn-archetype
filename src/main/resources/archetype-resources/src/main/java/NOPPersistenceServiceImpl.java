@@ -1,4 +1,4 @@
-package testgroup.web;
+package ${groupId};
 
 import co.paralleluniverse.fibers.Fiber;
 import co.paralleluniverse.fibers.SuspendExecution;

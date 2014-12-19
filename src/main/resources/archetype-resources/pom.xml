@@ -1,0 +1,569 @@
+#set($dollar = '$')
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>${groupId}</groupId>
+  <artifactId>${artifactId}</artifactId>
+  <version>${version}</version>
+  <packaging>war</packaging>
+  <name>Comsat servlet-based webapp</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>co.paralleluniverse</groupId>
+      <artifactId>quasar-core</artifactId>
+      <version>${quasarVersion}</version>
+#if ($javaVersion == "1.8")
+      <classifier>jdk8</classifier>
+#end
+    </dependency>
+
+    <dependency>
+      <groupId>co.paralleluniverse</groupId>
+      <artifactId>comsat-jersey-server</artifactId>
+      <version>${comsatVersion}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.jersey.media</groupId>
+      <artifactId>jersey-media-json-jackson</artifactId>
+      <version>2.13</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.0.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>co.paralleluniverse</groupId>
+      <artifactId>comsat-tomcat-loader</artifactId>
+      <version>${comsatVersion}</version>
+      <scope>provided</scope>
+#if ($javaVersion == "1.8")
+      <classifier>jdk8</classifier>
+#end
+    </dependency>
+
+    <dependency>
+      <groupId>co.paralleluniverse</groupId>
+      <artifactId>comsat-jetty-loader</artifactId>
+      <version>${comsatVersion}</version>
+      <scope>provided</scope>
+#if ($javaVersion == "1.8")
+      <classifier>jdk8</classifier>
+#end
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <servlet.port>${httpPort}</servlet.port>
+  </properties>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.2</version>
+          <configuration>
+            <source>${javaVersion}</source>
+            <target>${javaVersion}</target>
+          </configuration>
+        </plugin>
+
+        <!-- Collecting classpath entries as properties in the form groupId:artifactId:type:[classifier]
+             as per http://maven.apache.org/plugins/maven-dependency-plugin/properties-mojo.html -->
+        <plugin>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>2.5.1</version>
+          <executions>
+            <execution>
+              <id>getClasspathFilenames</id>
+              <phase>initialize</phase>
+              <goals>
+                <goal>properties</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.16</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+
+#if ($instrumentationMethod == "aot")
+      <!--
+          Compile-time (AoT) instrumentation; use _at most one of_ AoT instrumentation, agent-based instrumentation
+          and class-loading-based instrumenation
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+
+          <execution>
+            <id>instrument-classes</id>
+            <phase>compile</phase>
+            <configuration>
+              <tasks>
+                <property name="ant_classpath" refid="maven.dependency.classpath"/>
+                <taskdef name="instrumentationTask" classname="co.paralleluniverse.fibers.instrument.InstrumentationTask"
+                         classpath="${ant_classpath}"/>
+                <!-- Use "allowMonitors" to allow instrumenting methods containing synchronization -->
+                <!-- instrumentationTask allowMonitors="true" -->
+                <instrumentationTask>
+                  <fileset dir="${project.build.directory}/classes/" includes="**/*.class"/>
+                </instrumentationTask>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+
+          <execution>
+            <id>instrument-test-classes</id>
+            <phase>test-compile</phase>
+            <configuration>
+              <tasks>
+                <property name="ant_classpath" refid="maven.dependency.classpath"/>
+                <taskdef name="instrumentationTask" classname="co.paralleluniverse.fibers.instrument.InstrumentationTask"
+                         classpath="${ant_classpath}"/>
+                <!-- Use "allowMonitors" to allow instrumenting methods containing synchronization -->
+                <!-- instrumentationTask allowMonitors="true" -->
+                <instrumentationTask>
+                  <fileset dir="${project.build.directory}/test-classes/" includes="**/*.class"/>
+                </instrumentationTask>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+#else
+      <!--plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+
+          <execution>
+            <id>instrument-classes</id>
+            <phase>compile</phase>
+            <configuration>
+              <tasks>
+                <property name="ant_classpath" refid="maven.dependency.classpath"/>
+                <taskdef name="instrumentationTask" classname="co.paralleluniverse.fibers.instrument.InstrumentationTask"
+                         classpath="${ant_classpath}"/-->
+                <!-- Use "allowMonitors" to allow instrumenting methods containing synchronization -->
+                <!-- instrumentationTask allowMonitors="true" -->
+                <!--instrumentationTask>
+                  <fileset dir="${project.build.directory}/classes/" includes="**/*.class"/>
+                </instrumentationTask>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+
+          <execution>
+            <id>instrument-test-classes</id>
+            <phase>test-compile</phase>
+            <configuration>
+              <tasks>
+                <property name="ant_classpath" refid="maven.dependency.classpath"/>
+                <taskdef name="instrumentationTask" classname="co.paralleluniverse.fibers.instrument.InstrumentationTask"
+                         classpath="${ant_classpath}"/-->
+                <!-- Use "allowMonitors" to allow instrumenting methods containing synchronization -->
+                <!-- instrumentationTask allowMonitors="true" -->
+                <!--instrumentationTask>
+                  <fileset dir="${project.build.directory}/test-classes/" includes="**/*.class"/>
+                </instrumentationTask>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin-->
+#end
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.12</version>
+        <executions>
+          <execution>
+            <id>perform-it</id>
+            <goals>
+              <goal>integration-test</goal>
+            </goals>
+            <configuration>
+              <systemProperties>
+                <property>
+                  <name>servlet.port</name>
+                  <value>${servlet.port}</value>
+                </property>
+              </systemProperties>
+              <!-- Configure memory settings as needed -->
+              <!-- argLine>-Xmx1000m</argLine -->
+
+              <!--
+                  Agent-based runtime instrumentation, for tests; use _either_ AoT or agent-based, not both
+              -->
+
+              <!-- Turn off before production -->
+              <!-- argLine>-Dco.paralleluniverse.fibers.verifyInstrumentation=true</argLine-->
+
+              <!-- Enable if using compile-time (AoT) instrumentation -->
+              #if ($instrumentationMethod == "aot")
+              <argLine>-Dco.paralleluniverse.fibers.disableAgentWarning</argLine>
+              #else
+              <!-- argLine>-Dco.paralleluniverse.fibers.disableAgentWarning</argLine -->
+              #end
+
+              #if ($instrumentationMethod != "aot" && $javaVersion == "1.8")
+              <!-- Quasar Agent for JDK 7 -->
+              <!-- argLine>-javaagent:${dollar}{co.paralleluniverse:quasar-core:jar}</argLine-->
+
+              <!-- Quasar Agent for JDK 8 -->
+              <argLine>-javaagent:${dollar}{co.paralleluniverse:quasar-core:jar:jdk8}</argLine>
+              #elseif ($instrumentationMethod != "aot")
+              <!-- Quasar Agent for JDK 7 -->
+              <argLine>-javaagent:${dollar}{co.paralleluniverse:quasar-core:jar}</argLine>
+
+              <!-- Quasar Agent for JDK 8 -->
+              <!-- argLine>-javaagent:${dollar}{co.paralleluniverse:quasar-core:jar:jdk8}</argLine -->
+              #else
+              <!-- Quasar Agent for JDK 7 -->
+              <!-- argLine>-javaagent:${dollar}{co.paralleluniverse:quasar-core:jar}</argLine -->
+
+              <!-- Quasar Agent for JDK 8 -->
+              <!-- argLine>-javaagent:${dollar}{co.paralleluniverse:quasar-core:jar:jdk8}</argLine -->
+              #end
+            </configuration>
+          </execution>
+          <execution>
+            <id>verify-it</id>
+            <goals>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.cargo</groupId>
+        <artifactId>cargo-maven2-plugin</artifactId>
+        <version>1.4.11</version>
+        <configuration>
+          <configuration>
+            <properties>
+              <cargo.servlet.port>${dollar}{servlet.port}</cargo.servlet.port>
+            </properties>
+          </configuration>
+        </configuration>
+        <executions>
+          <execution>
+            <id>start-cargo</id>
+            <phase>pre-integration-test</phase>
+            <configuration>
+              <configuration>
+                <properties>
+                  <cargo.jvmargs>
+                    <!-- Debug -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -->
+                    <!-- Configure memory settings as needed --><!-- -Xmx1000m -->
+
+                    <!-- Turn off before production and when using AoT --> <!-- -Dco.paralleluniverse.fibers.verifyInstrumentation=true -->
+#if ($instrumentationMethod == "aot")
+                    <!-- Enable if using compile-time (AoT) instrumentation --> -Dco.paralleluniverse.fibers.disableAgentWarning
+#else
+                    <!-- Enable if using compile-time (AoT) instrumentation --> <!-- -Dco.paralleluniverse.fibers.disableAgentWarning -->
+#end
+
+#if ($instrumentationMethod != "aot" && $instrumentationMethod != "classloader" && $javaVersion == "1.8")
+                    <!-- Quasar Agent for JDK 7 --> <!-- -javaagent:${dollar}{co.paralleluniverse:quasar-core:jar} -->
+
+                    <!-- Quasar Agent for JDK 7 with "allow monitors" flag (which is valid for JDK 8 as well) --><!-- -javaagent:${dollar}{co.paralleluniverse:quasar-core:jar}=m -->
+
+                    <!-- Quasar Agent for JDK 8 --> -javaagent:${dollar}{co.paralleluniverse:quasar-core:jar:jdk8}
+#elseif ($instrumentationMethod != "aot" && $instrumentationMethod != "classloader")
+                    <!-- Quasar Agent for JDK 7 --> -javaagent:${dollar}{co.paralleluniverse:quasar-core:jar}
+
+                    <!-- Quasar Agent for JDK 7 with "allow monitors" flag (which is valid for JDK 8 as well) --><!-- -javaagent:${dollar}{co.paralleluniverse:quasar-core:jar}=m -->
+
+                    <!-- Quasar Agent for JDK 8 --> <!-- -javaagent:${dollar}{co.paralleluniverse:quasar-core:jar:jdk8} -->
+#else
+                    <!-- Quasar Agent for JDK 7 --> <!-- -javaagent:${dollar}{co.paralleluniverse:quasar-core:jar} -->
+
+                    <!-- Quasar Agent for JDK 7 with "allow monitors" flag (which is valid for JDK 8 as well) --><!-- -javaagent:${dollar}{co.paralleluniverse:comsat-servlet-container-agent:jar}=m -->
+
+                    <!-- Quasar Agent for JDK 8 --> <!-- -javaagent:${dollar}{co.paralleluniverse:quasar-core:jar:jdk8} -->
+#end
+                  </cargo.jvmargs>
+                </properties>
+              </configuration>
+            </configuration>
+            <goals>
+              <goal>start</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>stop-cargo</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+
+    <profile>
+      <id>jetty9x</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.codehaus.cargo</groupId>
+              <artifactId>cargo-maven2-plugin</artifactId>
+              <configuration>
+                <container>
+                  <containerId>jetty9x</containerId>
+                  <artifactInstaller>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-distribution</artifactId>
+                    <version>${jetty9Version}</version>
+                  </artifactInstaller>
+                </container>
+                <!--
+                    Class-loading-based instrumentation ; use _at most one of_ AoT instrumentation, agent-based instrumentation
+                    and class-loading-based instrumentation
+                -->
+#if ($instrumentationMethod == 'classloader')
+                <!-- Can't use the "dependencies" feature as it will copy into "ext/lib" instead of "lib"
+                     and behaviour is completely different -->
+                <files>
+                  <copy>
+  #if ($javaVersion == "1.8")
+                    <file>${dollar}{co.paralleluniverse:comsat-jetty-loader:jar:jdk8}</file>
+  #else
+                    <file>${dollar}{co.paralleluniverse:comsat-jetty-loader:jar}</file>
+  #end
+                    <todir>lib</todir>
+                    <configfile>false</configfile>
+                    <overwrite>true</overwrite>
+                  </copy>
+                </files>
+#else
+                <!-- Can't use the "dependencies" feature as it will copy into "ext/lib" instead of "lib"
+                     and behaviour is completely different -->
+                <!--files>
+                  <copy>
+  #if ($javaVersion == "1.8")
+                    <file>${dollar}{co.paralleluniverse:comsat-jetty-loader:jar:jdk8}</file>
+  #else
+                    <file>${dollar}{co.paralleluniverse:comsat-jetty-loader:jar}</file>
+  #end
+                    <todir>lib</todir>
+                    <configfile>false</configfile>
+                    <overwrite>true</overwrite>
+                  </copy>
+                </files-->
+#end
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+
+    <profile>
+      <id>jetty8x</id>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.codehaus.cargo</groupId>
+              <artifactId>cargo-maven2-plugin</artifactId>
+              <configuration>
+                <container>
+                  <containerId>jetty8x</containerId>
+                  <artifactInstaller>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-distribution</artifactId>
+                    <version>${jetty8Version}</version>
+                  </artifactInstaller>
+                </container>
+                <!--
+                    Class-loading-based instrumentation ; use _at most one of_ AoT instrumentation, agent-based instrumentation
+                    and class-loading-based instrumentation
+                -->
+#if ($instrumentationMethod == 'classloader')
+                <!-- Can't use the "dependencies" feature as it will copy into "ext/lib" instead of "lib"
+                     and behaviour is completely different -->
+                <files>
+                  <copy>
+  #if ($javaVersion == "1.8")
+                    <file>${dollar}{co.paralleluniverse:comsat-jetty-loader:jar:jdk8}</file>
+  #else
+                    <file>${dollar}{co.paralleluniverse:comsat-jetty-loader:jar}</file>
+  #end
+                    <todir>lib</todir>
+                    <configfile>false</configfile>
+                    <overwrite>true</overwrite>
+                  </copy>
+                </files>
+#else
+                <!-- Can't use the "dependencies" feature as it will copy into "ext/lib" instead of "lib"
+                     and behaviour is completely different -->
+                <!--files>
+                  <copy>
+  #if ($javaVersion == "1.8")
+                    <file>${dollar}{co.paralleluniverse:comsat-jetty-loader:jar:jdk8}</file>
+  #else
+                    <file>${dollar}{co.paralleluniverse:comsat-jetty-loader:jar}</file>
+  #end
+                    <todir>lib</todir>
+                    <configfile>false</configfile>
+                    <overwrite>true</overwrite>
+                  </copy>
+                </files-->
+#end
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+
+    <profile>
+      <id>tomcat8x</id>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.codehaus.cargo</groupId>
+              <artifactId>cargo-maven2-plugin</artifactId>
+              <configuration>
+                <container>
+                  <containerId>tomcat8x</containerId>
+                  <zipUrlInstaller>
+                    <url>http://archive.apache.org/dist/tomcat/tomcat-8/v${tomcat8Version}/bin/apache-tomcat-${tomcat8Version}.zip</url>
+                  </zipUrlInstaller>
+                  <!--
+                      Class-loading-based instrumentation ; use _at most one of_ AoT instrumentation, agent-based instrumentation
+                      and class-loading-based instrumentation
+                  -->
+#if ($instrumentationMethod == 'classloader')
+                  <dependencies>
+                      <!-- Will copy into common/lib, stuff shared by both server and apps -->
+                    <dependency>
+                      <groupId>co.paralleluniverse</groupId>
+                      <artifactId>comsat-tomcat-loader</artifactId>
+  #if ($javaVersion == "1.8")
+                      <classifier>jdk8</classifier>
+  #end
+                    </dependency>
+                  </dependencies>
+#else
+                  <!--dependencies-->
+                    <!-- Will copy into common/lib, stuff shared by both server and apps -->
+                    <!--dependency>
+                        <groupId>co.paralleluniverse</groupId>
+                        <artifactId>comsat-tomcat-loader</artifactId>
+  #if ($javaVersion == "1.8")
+                        <classifier>jdk8</classifier>
+  #end
+                    </dependency>
+                  </dependencies-->
+#end
+                </container>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+
+    <profile>
+      <id>tomcat7x</id>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.codehaus.cargo</groupId>
+              <artifactId>cargo-maven2-plugin</artifactId>
+              <configuration>
+                <container>
+                  <containerId>tomcat7x</containerId>
+                  <zipUrlInstaller>
+                    <url>http://archive.apache.org/dist/tomcat/tomcat-7/v${tomcat7Version}/bin/apache-tomcat-${tomcat7Version}.zip</url>
+                  </zipUrlInstaller>
+                  <!--
+                      Class-loading-based instrumentation ; use _at most one of_ AoT instrumentation, agent-based instrumentation
+                      and class-loading-based instrumentation
+                  -->
+#if ($instrumentationMethod == 'classloader')
+                  <dependencies>
+                    <!-- Will copy into common/lib, stuff shared by both server and apps -->
+                    <dependency>
+                      <groupId>co.paralleluniverse</groupId>
+                      <artifactId>comsat-tomcat-loader</artifactId>
+  #if ($javaVersion == "1.8")
+                      <classifier>jdk8</classifier>
+  #end
+                    </dependency>
+                  </dependencies>
+#else
+                  <!--dependencies-->
+                    <!-- Will copy into common/lib, stuff shared by both server and apps -->
+                    <!--dependency>
+                      <groupId>co.paralleluniverse</groupId>
+                      <artifactId>comsat-tomcat-loader</artifactId>
+  #if ($javaVersion == "1.8")
+                      <classifier>jdk8</classifier>
+  #end
+                    </dependency>
+                  </dependencies-->
+#end
+                </container>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+  </profiles>
+</project>

@@ -1,4 +1,4 @@
-package testgroup.web;
+package ${groupId};
 
 import java.util.Set;
 import javax.servlet.ServletContainerInitializer;

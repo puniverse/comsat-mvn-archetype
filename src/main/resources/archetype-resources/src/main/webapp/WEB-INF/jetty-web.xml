@@ -1,7 +1,8 @@
 <?xml version="1.0"  encoding="UTF-8"?>
 <!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure.dtd">
 <Configure id='ctx' class="org.eclipse.jetty.webapp.WebAppContext">
-    <!--use custom classloader in order to instrument classes by quasar-->
+#if ($instrumentationMethod == "classloader")
+    <!-- Load the webApp with class loader for instrumentation purposes-->
     <Set name="classLoader">
         <New class="co.paralleluniverse.comsat.jetty.QuasarWebAppClassLoader">
             <Arg>
@@ -9,4 +10,14 @@
             </Arg>
         </New>
     </Set>
+#else
+    <!-- Load the webApp with class loader for instrumentation purposes-->
+    <!-- Set name="classLoader">
+        <New class="co.paralleluniverse.comsat.jetty.QuasarWebAppClassLoader">
+            <Arg>
+                <Ref id="ctx"/>
+            </Arg>
+        </New>
+    </Set -->
+#end
 </Configure>

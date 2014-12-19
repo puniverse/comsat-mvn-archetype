@@ -1,4 +1,4 @@
-package testgroup.web;
+package ${groupId};
 
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 

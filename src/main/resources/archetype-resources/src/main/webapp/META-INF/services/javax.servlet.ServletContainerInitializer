@@ -1,0 +1,3 @@
+#if ($useWebXml == "false")
+testgroup.web.ServletContextSetup
+#end

@@ -1,3 +1,18 @@
-# *comsat-servlet-container-jersey-maven-template* (Work in Progress)
+# *comsat-mvn-archetype*
 
-A Maven template (to become an artifact) to use [Parallel Universe Comsat](http://www.paralleluniverse.co/comsat/) with Jetty (8.1.x and 9.2.x) and Tomcat (7.0.x and 8.0.x) servlet containers
+A [Parallel Universe Comsat](http://www.paralleluniverse.co/comsat/) Maven archetype for servlet-based Java 1.7+ applications.
+
+## Getting started
+
+```
+git clone https://github.com/circlespainter/comsat-mvn-archetype
+cd comsat-mvn-archetype
+mvn install
+cd ..
+mvn archetype:generate -DarchetypeGroupId=co.paralleluniverse -DarchetypeArtifactId=comsat-mvn-archetype -DarchetypeVersion=0.1.0-SNAPSHOT -DgroupId=testgrp -DartifactId=testprj
+cd testprj
+mvn -Pjetty8x dependency:properties clean verify
+mvn -Pjetty9x dependency:properties clean verify
+mvn -Ptomcat7x dependency:properties clean verify
+mvn -Ptomcat8x dependency:properties clean verify
+```
