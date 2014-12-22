@@ -16,3 +16,5 @@ mvn -Pjetty9x dependency:properties clean verify
 mvn -Ptomcat7x dependency:properties clean verify
 mvn -Ptomcat8x dependency:properties clean verify
 ```
+
+Other useful properties to set during project generation are `-DjavaVersion=<1.7|1.8> -DquasarVersion=<quasarVersion> -DcomsatVersion=<comsatVerson> -DinstrumentationMethod=<agent|aot|classloader>`
