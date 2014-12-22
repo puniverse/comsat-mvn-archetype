@@ -1,5 +1,6 @@
 package ${groupId};
 
+import co.paralleluniverse.fibers.Fiber;
 import co.paralleluniverse.fibers.SuspendExecution;
 import co.paralleluniverse.fibers.Suspendable;
 import java.io.IOException;
@@ -7,10 +8,7 @@ import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -21,6 +19,15 @@ import javax.ws.rs.core.MediaType;
 public class Resource {
     @Inject
     PersistenceService ps;
+
+    @GET
+    @Path("hello")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Suspendable
+    public String hello() throws SuspendExecution, InterruptedException {
+        Fiber.sleep(100);
+        return "Hello world";
+    }
 
     @POST
     @Path("data")

@@ -1,11 +1,17 @@
 package ${groupId};
 
 import junit.framework.TestCase;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.net.URL;
 import java.net.HttpURLConnection;
 
@@ -17,16 +23,42 @@ public class WebAppIT extends TestCase {
         port = System.getProperty("servlet.port");
     }
 
-    public void testCallIndexPage() throws Exception {
+    public void testCallIndexPageJersey() throws Exception {
+        Client client = ClientBuilder.newBuilder().build();
+        Response res = client.target("http://localhost:" + port + "/${artifactId}/fiber-servlet-hello").request().get();
+        assertEquals(200, res.getStatus());
+        assertTrue(res.readEntity(String.class).contains("Hello world"));
+    }
+
+    public void testCallHelloJersey() throws Exception {
+        Client client = ClientBuilder.newBuilder().build();
+        Response res = client.target("http://localhost:" + port + "/${artifactId}/fiber-jaxrs/hello").request().get();
+        assertEquals(200, res.getStatus());
+        assertTrue(res.readEntity(String.class).contains("Hello world"));
+    }
+
+    public void testCallIndexPageURLConnection() throws Exception {
         URL url = new URL("http://localhost:" + port + "/${artifactId}/fiber-servlet-hello");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.connect();
         assertEquals(200, connection.getResponseCode());
     }
 
-    public void testCallRest() throws Exception {
+    public void testCallJerseyPost() throws Exception {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost("http://localhost:" + port + "/${artifactId}/fiber-jaxrs/data");
+        String payload = "{\"f1\" : \"v1\", \"f2\" : \"v2\"}";
+        StringEntity se = new StringEntity(payload);
+        se.setContentType("application/json");
+        httpPost.setEntity(se);
+        HttpResponse httpResponse = httpClient.execute(httpPost);
+        assertEquals(204, httpResponse.getStatusLine().getStatusCode());
+    }
+
+    public void testCallJerseyPost2() throws Exception {
         Client client = ClientBuilder.newBuilder().build();
         String payload = "{\"f1\" : \"v1\", \"f2\" : \"v2\"}";
-        assertEquals(200, client.target("http://localhost" + port + "/${artifactId}/fiber-jaxrs/data").request().post(Entity.entity(payload, MediaType.APPLICATION_JSON)).getStatus());
+        Response res = client.target("http://localhost:" + port + "/${artifactId}/fiber-jaxrs/data").request().post(Entity.entity(payload, MediaType.APPLICATION_JSON_TYPE));
+        assertEquals(204, res.getStatus());
     }
 }

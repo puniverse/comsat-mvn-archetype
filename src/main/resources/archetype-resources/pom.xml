@@ -21,6 +21,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.3.5</version>
+    </dependency>
+
+    <dependency>
       <groupId>co.paralleluniverse</groupId>
       <artifactId>comsat-jersey-server</artifactId>
       <version>${comsatVersion}</version>
@@ -230,6 +236,10 @@
                   <value>${servlet.port}</value>
                 </property>
               </systemProperties>
+              <!-- Debug -->
+              <!-- argLine>-Xdebug<argLine -->
+              <!-- argLine>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5006<argLine -->
+
               <!-- Configure memory settings as needed -->
               <!-- argLine>-Xmx1000m</argLine -->
 
@@ -296,7 +306,7 @@
               <configuration>
                 <properties>
                   <cargo.jvmargs>
-                    <!-- Debug -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -->
+                    <!-- Debug --> <!-- -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -->
                     <!-- Configure memory settings as needed --><!-- -Xmx1000m -->
 
                     <!-- Turn off before production and when using AoT --> <!-- -Dco.paralleluniverse.fibers.verifyInstrumentation=true -->
@@ -374,7 +384,7 @@
 #if ($instrumentationMethod == 'classloader')
                 <!-- Can't use the "dependencies" feature as it will copy into "ext/lib" instead of "lib"
                      and behaviour is completely different -->
-                <files>
+                <configuration><files>
                   <copy>
   #if ($javaVersion == "1.8")
                     <file>${dollar}{co.paralleluniverse:comsat-jetty-loader:jar:jdk8}</file>
@@ -385,7 +395,7 @@
                     <configfile>false</configfile>
                     <overwrite>true</overwrite>
                   </copy>
-                </files>
+                </files></configuration>
 #else
                 <!-- Can't use the "dependencies" feature as it will copy into "ext/lib" instead of "lib"
                      and behaviour is completely different -->
@@ -433,18 +443,20 @@
 #if ($instrumentationMethod == 'classloader')
                 <!-- Can't use the "dependencies" feature as it will copy into "ext/lib" instead of "lib"
                      and behaviour is completely different -->
-                <files>
-                  <copy>
-  #if ($javaVersion == "1.8")
-                    <file>${dollar}{co.paralleluniverse:comsat-jetty-loader:jar:jdk8}</file>
-  #else
-                    <file>${dollar}{co.paralleluniverse:comsat-jetty-loader:jar}</file>
-  #end
-                    <todir>lib</todir>
-                    <configfile>false</configfile>
-                    <overwrite>true</overwrite>
-                  </copy>
-                </files>
+                <configuration>
+                  <files>
+                      <copy>
+      #if ($javaVersion == "1.8")
+                        <file>${dollar}{co.paralleluniverse:comsat-jetty-loader:jar:jdk8}</file>
+      #else
+                        <file>${dollar}{co.paralleluniverse:comsat-jetty-loader:jar}</file>
+      #end
+                        <todir>lib</todir>
+                        <configfile>false</configfile>
+                        <overwrite>true</overwrite>
+                      </copy>
+                  </files>
+                </configuration>
 #else
                 <!-- Can't use the "dependencies" feature as it will copy into "ext/lib" instead of "lib"
                      and behaviour is completely different -->
