@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
-#if ($instrumentationMethod == "classloader")
     <!-- Load the webApp with class loader for instrumentation purposes-->
     <Loader loaderClass="co.paralleluniverse.comsat.tomcat.QuasarWebAppClassLoader" />
-#else
-    <!-- Load the webApp with class loader for instrumentation purposes-->
-    <!-- Loader loaderClass="co.paralleluniverse.comsat.tomcat.QuasarWebAppClassLoader" / -->
-#end
 </Context>

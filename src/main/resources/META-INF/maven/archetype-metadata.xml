@@ -11,24 +11,14 @@
         <requiredProperty key="comsatVersion">
             <defaultValue>0.3.0</defaultValue>
         </requiredProperty>
-        <requiredProperty key="instrumentationMethod">
-            <!-- One of "agent", "classloader" or "aot" -->
-            <defaultValue>agent</defaultValue>
-        </requiredProperty>
         <requiredProperty key="tomcat7Version">
             <defaultValue>7.0.56</defaultValue>
         </requiredProperty>
         <requiredProperty key="tomcat8Version">
             <defaultValue>8.0.15</defaultValue>
         </requiredProperty>
-        <requiredProperty key="jetty8Version">
-            <defaultValue>8.1.15.v20140411</defaultValue>
-        </requiredProperty>
-        <requiredProperty key="jetty9Version">
-            <defaultValue>9.2.1.v20140609</defaultValue>
-        </requiredProperty>
         <requiredProperty key="useWebXml">
-            <defaultValue>false</defaultValue>
+            <defaultValue>true</defaultValue>
         </requiredProperty>
         <requiredProperty key="httpPort">
             <defaultValue>8080</defaultValue>
@@ -41,11 +31,16 @@
                 <include>.gitignore</include>
                 <include>.travis.yml</include>
                 <include>README.md</include>
-                <include>jetty-context.xml</include>
             </includes>
         </fileSet>
         <fileSet filtered="true" packaged="false" encoding="UTF-8">
             <directory>src/main/webapp</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+        <fileSet filtered="true" packaged="false" encoding="UTF-8">
+            <directory>src/main/resources</directory>
             <includes>
                 <include>**/*</include>
             </includes>
