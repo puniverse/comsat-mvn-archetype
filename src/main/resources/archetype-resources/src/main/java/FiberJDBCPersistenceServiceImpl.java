@@ -7,15 +7,20 @@ import co.paralleluniverse.fibers.Suspendable;
 import java.io.IOException;
 
 /**
- * NOP implementation of the {@link PersistenceService}
+ * JDBC implementation of the {@link PersistenceService}
  *
  * @author circlespainter
  */
-public class NOPPersistenceServiceImpl implements PersistenceService {
+public class FiberJDBCPersistenceServiceImpl implements PersistenceService {
 
     @Override
-    @Suspendable
     public void store(Data pb) throws IOException, InterruptedException, SuspendExecution  {
         Fiber.sleep(1000);
+    }
+
+    @Override
+    public boolean checkRO() throws IOException, InterruptedException, SuspendExecution {
+        Fiber.sleep(100);
+        return false;
     }
 }
