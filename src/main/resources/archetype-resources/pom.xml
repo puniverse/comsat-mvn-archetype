@@ -12,12 +12,26 @@
 
   <dependencies>
     <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <scope>system</scope>
+      <version>1.4.185</version>
+      <systemPath>${basedir}/src/lib/h2-1.4.185.jar</systemPath>
+    </dependency>
+
+    <dependency>
       <groupId>co.paralleluniverse</groupId>
       <artifactId>quasar-core</artifactId>
       <version>${quasarVersion}</version>
 #if ($javaVersion == "1.8")
       <classifier>jdk8</classifier>
 #end
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.9</version>
     </dependency>
 
     <dependency>
@@ -30,6 +44,12 @@
       <groupId>co.paralleluniverse</groupId>
       <artifactId>comsat-jersey-server</artifactId>
       <version>${comsatVersion}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>co.paralleluniverse</groupId>
+      <artifactId>comsat-jdbc</artifactId>
+      <version>0.3.0</version>
     </dependency>
 
     <dependency>
@@ -167,6 +187,15 @@
         <configuration>
           <configuration>
             <properties>
+              <cargo.jvmargs>
+                -Dwar.location="${project.build.directory}/comsat-testprj-1.0-SNAPSHOT.war"
+
+                <!-- Debug --> <!-- -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -->
+                <!-- Configure memory settings as needed --> -Xmx1000m
+
+                <!-- Turn off before production --> -Dco.paralleluniverse.fibers.verifyInstrumentation=true
+                <!-- Enable if using compile-time (AoT) instrumentation --> <!-- -Dco.paralleluniverse.fibers.disableAgentWarning -->
+              </cargo.jvmargs>
               <cargo.servlet.port>${dollar}{servlet.port}</cargo.servlet.port>
             </properties>
           </configuration>
@@ -175,21 +204,6 @@
           <execution>
             <id>start-cargo</id>
             <phase>pre-integration-test</phase>
-            <configuration>
-              <configuration>
-                <properties>
-                  <cargo.jvmargs>
-                    -Dwar.location="${dollar}{project.build.directory}/${artifactId}-${version}.war"
-
-                    <!-- Debug --> <!-- -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -->
-                    <!-- Configure memory settings as needed --><!-- -Xmx1000m -->
-
-                    <!-- Turn off before production --> -Dco.paralleluniverse.fibers.verifyInstrumentation=true
-                    <!-- Enable if using compile-time (AoT) instrumentation --> <!-- -Dco.paralleluniverse.fibers.disableAgentWarning -->
-                  </cargo.jvmargs>
-                </properties>
-              </configuration>
-            </configuration>
             <goals>
               <goal>start</goal>
             </goals>
@@ -238,8 +252,26 @@
                       <classifier>jdk8</classifier>
 #end
                     </dependency>
+                    <dependency>
+                      <groupId>co.paralleluniverse</groupId>
+                      <artifactId>comsat-jdbc</artifactId>
+                    </dependency>
+                    <dependency>
+                      <groupId>com.h2database</groupId>
+                      <artifactId>h2</artifactId>
+                    </dependency>
                   </dependencies>
                 </container>
+                <configuration>
+                  <files>
+                    <copy>
+                      <file>${basedir}/tomcat/8x/conf/server.xml</file>
+                      <tofile>conf/server.xml</tofile>
+                      <configfile>true</configfile>
+                      <overwrite>true</overwrite>
+                    </copy>
+                  </files>
+                </configuration>
               </configuration>
             </plugin>
           </plugins>
@@ -274,8 +306,26 @@
                       <classifier>jdk8</classifier>
 #end
                     </dependency>
+                    <dependency>
+                      <groupId>co.paralleluniverse</groupId>
+                      <artifactId>comsat-jdbc</artifactId>
+                    </dependency>
+                    <dependency>
+                      <groupId>com.h2database</groupId>
+                      <artifactId>h2</artifactId>
+                    </dependency>
                   </dependencies>
                 </container>
+                <configuration>
+                  <files>
+                    <copy>
+                      <file>${basedir}/tomcat/7x/conf/server.xml</file>
+                      <tofile>conf/server.xml</tofile>
+                      <configfile>true</configfile>
+                      <overwrite>true</overwrite>
+                    </copy>
+                  </files>
+                </configuration>
               </configuration>
             </plugin>
           </plugins>

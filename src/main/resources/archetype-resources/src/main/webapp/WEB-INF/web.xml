@@ -33,6 +33,14 @@
         <servlet-name>fiber</servlet-name>
         <url-pattern>/fiber-jaxrs/*</url-pattern>
     </servlet-mapping>
+
+    <!-- Datasource -->
+    <resource-ref>
+        <description>DB Connection</description>
+        <res-ref-name>jdbc/fiberds</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
 #else
     <!-- Register the fiber-blocking Jersey servlet -->
     <!--servlet>
@@ -60,5 +68,13 @@
         <servlet-name>fiber</servlet-name>
         <url-pattern>/fiber-jaxrs/*</url-pattern>
     </servlet-mapping-->
+
+    <!-- Datasource -->
+    <!--resource-ref>
+        <description>DB Connection</description>
+        <res-ref-name>jdbc/fiberds</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref-->
 #end
 </web-app>

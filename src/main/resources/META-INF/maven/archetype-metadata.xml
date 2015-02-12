@@ -25,6 +25,18 @@
         </requiredProperty>
     </requiredProperties>
     <fileSets>
+        <fileSet filtered="false" packaged="false" encoding="UTF-8">
+            <directory>src/lib</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+        <fileSet filtered="false" packaged="false" encoding="UTF-8">
+            <directory>tomcat</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
         <fileSet filtered="true" packaged="false" encoding="UTF-8">
             <directory></directory>
             <includes>
