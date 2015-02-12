@@ -32,7 +32,6 @@ public class Resource {
     @Path("hello")
     @Produces(MediaType.TEXT_PLAIN)
     public String hello() throws SuspendExecution, InterruptedException {
-        Fiber.sleep(100);
         return "Hello world!";
     }
 

@@ -1,10 +1,14 @@
 package ${groupId};
 
-import co.paralleluniverse.fibers.Fiber;
 import co.paralleluniverse.fibers.SuspendExecution;
-import co.paralleluniverse.fibers.Suspendable;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * JDBC implementation of the {@link PersistenceService}
@@ -13,14 +17,33 @@ import java.io.IOException;
  */
 public class FiberJDBCPersistenceServiceImpl implements PersistenceService {
 
+    private DataSource ds;
+
+    private void init() {
+        try {
+            if (ds == null) {
+                Context initCtx = new InitialContext();
+                Context envCtx = (Context) initCtx.lookup("java:comp/env");
+                this.ds = (DataSource) envCtx.lookup("jdbc/fiberds");
+            }
+        } catch (final NamingException ne) {
+            throw new RuntimeException(ne);
+        }
+    }
+
     @Override
     public void store(Data pb) throws IOException, InterruptedException, SuspendExecution  {
-        Fiber.sleep(1000);
+        init();
+        // TODO
     }
 
     @Override
     public boolean checkRO() throws IOException, InterruptedException, SuspendExecution {
-        Fiber.sleep(100);
-        return false;
+        init();
+        try (final Connection c = ds.getConnection()) {
+            return c.getMetaData().isReadOnly();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
