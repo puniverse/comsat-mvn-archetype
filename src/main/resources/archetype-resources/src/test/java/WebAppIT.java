@@ -37,6 +37,13 @@ public class WebAppIT extends TestCase {
         assertTrue(res.readEntity(String.class).contains("Hello world"));
     }
 
+    public void testCallCheckJersey() throws Exception {
+        Client client = ClientBuilder.newBuilder().build();
+        Response res = client.target("http://localhost:" + port + "/${artifactId}/fiber-jaxrs/checkRO").request().get();
+        assertEquals(200, res.getStatus());
+        assertTrue(res.readEntity(String.class).contains("false"));
+    }
+
     public void testCallIndexPageURLConnection() throws Exception {
         URL url = new URL("http://localhost:" + port + "/${artifactId}/fiber-servlet-hello");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
