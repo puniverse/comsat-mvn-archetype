@@ -188,12 +188,17 @@
           <configuration>
             <properties>
               <cargo.jvmargs>
+                -server
+                -Xmixed
+                -XX:+TieredCompilation
+                -XX:+AggressiveOpts
+                -Xmx1024m
+
                 -Dwar.location="${project.build.directory}/comsat-testprj-1.0-SNAPSHOT.war"
 
                 <!-- Debug --> <!-- -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -->
-                <!-- Configure memory settings as needed --> -Xmx1000m
 
-                <!-- Turn off before production --> -Dco.paralleluniverse.fibers.verifyInstrumentation=true
+                <!-- Turn off before production --> <!-- -Dco.paralleluniverse.fibers.verifyInstrumentation=true -->
                 <!-- Enable if using compile-time (AoT) instrumentation --> <!-- -Dco.paralleluniverse.fibers.disableAgentWarning -->
               </cargo.jvmargs>
               <cargo.servlet.port>${dollar}{servlet.port}</cargo.servlet.port>
