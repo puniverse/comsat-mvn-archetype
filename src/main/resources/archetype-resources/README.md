@@ -8,7 +8,7 @@ A [Parallel Universe Comsat](http://www.paralleluniverse.co/comsat/) Maven test 
 mvn -Ptomcat7x dependency:properties clean verify
 mvn -Ptomcat7x dependency:properties package cargo:run # CTRL+C to stop
 mvn -Ptomcat8x dependency:properties clean verify
-mvn -Ptomcat7x dependency:properties package cargo:run # CTRL+C to stop
+mvn -Ptomcat8x dependency:properties package cargo:run # CTRL+C to stop
 mvn -Pdropwizard dependency:properties clean compile exec:exec # CTRL+C to stop
 ```
 

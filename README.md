@@ -14,7 +14,8 @@ cd testprj
 mvn -Ptomcat7x dependency:properties clean verify
 mvn -Ptomcat7x dependency:properties package cargo:run # CTRL+C to stop
 mvn -Ptomcat8x dependency:properties clean verify
-mvn -Ptomcat7x dependency:properties package cargo:run # CTRL+C to stop
+mvn -Ptomcat8x dependency:properties package cargo:run # CTRL+C to stop
+mvn -Pdropwizard dependency:properties clean compile exec:exec # CTRL+C to stop
 ```
 
 Other useful properties to set during project generation are `-DjavaVersion=<1.7|1.8> -DquasarVersion=<quasarVersion, e.g. 0.6.2> -DcomsatVersion=<comsatVersion, e.g. 0.3.0> -Dtomcat7Version=<tomcat7Version, e.g. 7.0.56> -Dtomcat8Version=<tomcat8Version, e.g. 8.0.15> -DuseWebXml=<true|false>`
