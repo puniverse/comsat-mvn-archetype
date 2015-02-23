@@ -1,4 +1,4 @@
-package ${groupId};
+package ${groupId}.srv;
 
 import co.paralleluniverse.fibers.SuspendExecution;
 

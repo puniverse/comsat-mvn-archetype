@@ -1,4 +1,4 @@
-package ${groupId};
+package ${groupId}.srv;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;

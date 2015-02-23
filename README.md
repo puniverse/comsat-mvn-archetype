@@ -1,6 +1,6 @@
 # *comsat-mvn-archetype*
 
-A [Parallel Universe Comsat](http://www.paralleluniverse.co/comsat/) Maven archetype for Tomcat standalone Java 1.7+ applications showing how to setup Fiber-blocking Servlets, Jersey (client and server), JDBC, Metrics, Apache HTTP Client with Tomcat 7/8 standalone deployments through Cargo.
+A [Parallel Universe Comsat](http://www.paralleluniverse.co/comsat/) Maven archetype for both Dropwizard embedded and Tomcat standalone Java 1.7+ applications showing how to setup Comsat's fiber-blocking servlets, Jersey (client and server), JDBC, Metrics and Apache HTTP Client. Tomcat 7/8 standalone deployments are managed through Cargo.
 
 ## Getting started
 
@@ -9,7 +9,7 @@ git clone https://github.com/puniverse/comsat-mvn-archetype
 cd comsat-mvn-archetype
 mvn install
 cd ..
-mvn archetype:generate -DarchetypeGroupId=co.paralleluniverse -DarchetypeArtifactId=comsat-mvn-archetype -DarchetypeVersion=0.1.1 -DgroupId=testgrp -DartifactId=testprj
+mvn archetype:generate -DarchetypeGroupId=co.paralleluniverse -DarchetypeArtifactId=comsat-mvn-archetype -DarchetypeVersion=0.1.2 -DgroupId=testgrp -DartifactId=testprj
 cd testprj
 mvn -Ptomcat7x dependency:properties clean verify
 mvn -Ptomcat7x dependency:properties package cargo:run # CTRL+C to stop

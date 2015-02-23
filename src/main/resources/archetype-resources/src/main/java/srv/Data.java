@@ -1,4 +1,4 @@
-package ${groupId};
+package ${groupId}.srv;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

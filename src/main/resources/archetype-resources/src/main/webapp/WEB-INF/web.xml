@@ -17,12 +17,12 @@
         <!-- Add Jersey configuration class -->
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>${groupId}.JerseyApplication</param-value>
+            <param-value>${groupId}.srv.JerseyApplication</param-value>
         </init-param>
         <!-- Set packages to be scanned for resources -->
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
-            <param-value>${groupId}</param-value>
+            <param-value>${groupId}.srv</param-value>
         </init-param>
         <!-- Don't lazy-load (fail-fast) -->
         <load-on-startup>1</load-on-startup>

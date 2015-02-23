@@ -1,4 +1,4 @@
-package ${groupId};
+package ${groupId}.srv;
 
 import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;

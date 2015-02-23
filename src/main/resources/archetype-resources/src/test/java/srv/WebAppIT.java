@@ -1,4 +1,4 @@
-package ${groupId};
+package ${groupId}.srv;
 
 import junit.framework.TestCase;
 import org.apache.http.HttpResponse;

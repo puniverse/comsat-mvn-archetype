@@ -1,4 +1,4 @@
-package ${groupId};
+package ${groupId}.srv;
 
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 

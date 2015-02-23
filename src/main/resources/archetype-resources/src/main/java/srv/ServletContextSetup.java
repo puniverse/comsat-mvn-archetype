@@ -1,4 +1,4 @@
-package ${groupId};
+package ${groupId}.srv;
 
 import java.util.Set;
 import javax.servlet.ServletContainerInitializer;
@@ -20,7 +20,7 @@ public class ServletContextSetup implements ServletContainerInitializer {
         fiber.setInitParameter("javax.ws.rs.Application", "${groupId}.JerseyApplication");
 
         // Set packages to be scanned for resources
-        fiber.setInitParameter("jersey.config.server.provider.packages", "${groupId}");
+        fiber.setInitParameter("jersey.config.server.provider.packages", "${groupId}.srv");
 
         // Don't lazy-load (fail-fast)
         fiber.setLoadOnStartup(1);

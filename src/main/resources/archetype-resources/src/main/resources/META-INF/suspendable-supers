@@ -1,0 +1,3 @@
+${groupId}.dw.Main$ModernDAO.insert
+${groupId}.dw.Main$ModernDAO.findById
+${groupId}.dw.Main$ModernDAO.all
