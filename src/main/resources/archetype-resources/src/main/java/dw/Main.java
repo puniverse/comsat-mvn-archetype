@@ -129,21 +129,18 @@ public class Main extends FiberApplication<Main.JModernConfiguration> {
 
         @Timed
         @POST @Path("/add")
-        @Suspendable
         public Something add(String name) throws SuspendExecution {
             return find(dao.insert(name));
         }
 
         @Timed
         @GET @Path("/item/{id}")
-        @Suspendable
         public Something find(@PathParam("id") Integer id) throws SuspendExecution {
             return dao.findById(id);
         }
 
         @Timed
         @GET @Path("/all")
-        @Suspendable
         public List<Something> all(@PathParam("id") Integer id) throws SuspendExecution {
             return dao.all();
         }
@@ -153,15 +150,12 @@ public class Main extends FiberApplication<Main.JModernConfiguration> {
     public interface ModernDAO {
         @SqlUpdate("insert into something (name) values (:name)")
         @GetGeneratedKeys
-        @Suspendable
         int insert(@Bind("name") String name);
 
         @SqlQuery("select * from something where id = :id")
-        @Suspendable
         Something findById(@Bind("id") int id);
 
         @SqlQuery("select * from something")
-        @Suspendable
         List<Something> all();
     }
 
@@ -183,11 +177,9 @@ public class Main extends FiberApplication<Main.JModernConfiguration> {
 
     public interface HelloWorldAPI {
         @GET @Path("/hello-world")
-        @Suspendable
         Saying hi(@QueryParam("name") String name);
 
         @GET @Path("/hello-world")
-        @Suspendable
         Saying hi();
     }
 
