@@ -17,7 +17,7 @@ public class ServletContextSetup implements ServletContainerInitializer {
         javax.servlet.ServletRegistration.Dynamic fiber = sc.addServlet("fiber", co.paralleluniverse.fibers.jersey.ServletContainer.class);
 
         // Add Jersey configuration class
-        fiber.setInitParameter("javax.ws.rs.Application", "${groupId}.JerseyApplication");
+        fiber.setInitParameter("javax.ws.rs.Application", "${groupId}.srv.JerseyApplication");
 
         // Set packages to be scanned for resources
         fiber.setInitParameter("jersey.config.server.provider.packages", "${groupId}.srv");
