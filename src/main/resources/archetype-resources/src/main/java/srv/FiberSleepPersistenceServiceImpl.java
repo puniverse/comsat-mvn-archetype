@@ -7,7 +7,7 @@ import co.paralleluniverse.fibers.Suspendable;
 import java.io.IOException;
 
 /**
- * NOP implementation of the {@link PersistenceService}
+ * Fiber-blocking sleep + NOP implementation of the {@link PersistenceService}
  *
  * @author circlespainter
  */

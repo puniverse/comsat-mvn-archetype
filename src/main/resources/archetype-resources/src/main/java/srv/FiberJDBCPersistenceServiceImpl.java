@@ -11,7 +11,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * JDBC implementation of the {@link PersistenceService}
+ * Fiber-blocking JDBC implementation of the {@link PersistenceService}
  *
  * @author circlespainter
  */
