@@ -40,28 +40,15 @@
     </dependency>
 
     <dependency>
-      <groupId>co.paralleluniverse</groupId>
-      <artifactId>comsat-dropwizard</artifactId>
-      <version>0.3.0</version>
-      <!-- Exclude Jersey 1.x's runtime by default, Tomcat uses 2.x -->
-      <exclusions>
-        <exclusion>
-          <groupId>com.sun.jersey</groupId>
-          <artifactId>jersey-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.sun.jersey</groupId>
-          <artifactId>jersey-server</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.sun.jersey</groupId>
-          <artifactId>jersey-servlet</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.sun.jersey</groupId>
-          <artifactId>jersey-client</artifactId>
-        </exclusion>
-      </exclusions>
+      <groupId>org.glassfish.jersey.core</groupId>
+      <artifactId>jersey-server</artifactId>
+      <version>2.13</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.jersey.containers</groupId>
+      <artifactId>jersey-container-servlet</artifactId>
+      <version>2.13</version>
     </dependency>
 
     <dependency>
@@ -90,9 +77,9 @@
     </dependency>
 
     <dependency>
-      <groupId>co.paralleluniverse</groupId>
-      <artifactId>comsat-jdbi</artifactId>
-      <version>0.3.0</version>
+      <groupId>io.dropwizard</groupId>
+      <artifactId>dropwizard-jdbi</artifactId>
+      <version>0.7.1</version>
     </dependency>
 
     <dependency>
@@ -126,15 +113,6 @@
     </dependency>
 
     <dependency>
-      <groupId>co.paralleluniverse</groupId>
-      <artifactId>quasar-core</artifactId>
-      <version>${quasarVersion}</version>
-#if ($javaVersion == "1.8")
-      <classifier>jdk8</classifier>
-#end
-    </dependency>
-
-    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>1.7.9</version>
@@ -144,18 +122,6 @@
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
       <version>4.3.5</version>
-    </dependency>
-
-    <dependency>
-      <groupId>co.paralleluniverse</groupId>
-      <artifactId>comsat-jersey-server</artifactId>
-      <version>${comsatVersion}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>co.paralleluniverse</groupId>
-      <artifactId>comsat-jdbc</artifactId>
-      <version>0.3.0</version>
     </dependency>
 
     <dependency>
@@ -169,16 +135,6 @@
       <artifactId>javax.servlet-api</artifactId>
       <version>3.0.1</version>
       <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>co.paralleluniverse</groupId>
-      <artifactId>comsat-tomcat-loader</artifactId>
-      <version>${comsatVersion}</version>
-      <scope>provided</scope>
-#if ($javaVersion == "1.8")
-      <classifier>jdk8</classifier>
-#end
     </dependency>
 
     <dependency>
@@ -215,25 +171,6 @@
               <!-- Configure memory settings as needed -->
               <!-- argument>-Xmx1000m</argument -->
 
-              <!-- Turn off before production -->
-              <!-- argument>-Dco.paralleluniverse.fibers.verifyInstrumentation=true</argument -->
-
-              <!-- Enable if using compile-time (AoT) instrumentation -->
-              <!-- argument>-Dco.paralleluniverse.fibers.disableAgentWarning</argument -->
-
-              #if ($javaVersion == "1.8")
-              <!-- Quasar Agent for JDK 7 -->
-              <!-- argLine>-javaagent:${dollar}{co.paralleluniverse:quasar-core:jar}</argLine-->
-
-              <!-- Quasar Agent for JDK 8 -->
-              <argLine>-javaagent:${dollar}{co.paralleluniverse:quasar-core:jar:jdk8}</argLine>
-              #else
-              <!-- Quasar Agent for JDK 7 -->
-              <argLine>-javaagent:${dollar}{co.paralleluniverse:quasar-core:jar}</argLine>
-
-              <!-- Quasar Agent for JDK 8 -->
-              <!-- argLine>-javaagent:${dollar}{co.paralleluniverse:quasar-core:jar:jdk8}</argLine -->
-              #end
               <!-- Classpath -->
               <argument>-classpath</argument> <classpath/>
 
@@ -320,23 +257,6 @@
 
               <!-- Configure memory settings as needed -->
               <!-- argLine>-Xmx1000m</argLine -->
-
-              <!-- Turn off before production -->
-              <!-- argLine>-Dco.paralleluniverse.fibers.verifyInstrumentation=true</argLine-->
-
-#if ($javaVersion == "1.8")
-              <!-- Quasar Agent for JDK 7 -->
-              <!-- argLine>-javaagent:${dollar}{co.paralleluniverse:quasar-core:jar}</argLine-->
-
-              <!-- Quasar Agent for JDK 8 -->
-              <argLine>-javaagent:${dollar}{co.paralleluniverse:quasar-core:jar:jdk8}</argLine>
-#else
-              <!-- Quasar Agent for JDK 7 -->
-              <argLine>-javaagent:${dollar}{co.paralleluniverse:quasar-core:jar}</argLine>
-
-              <!-- Quasar Agent for JDK 8 -->
-              <!-- argLine>-javaagent:${dollar}{co.paralleluniverse:quasar-core:jar:jdk8}</argLine -->
-#end
             </configuration>
           </execution>
           <execution>
@@ -365,9 +285,6 @@
                 -Dwar.location="${project.build.directory}/comsat-testprj-1.0-SNAPSHOT.war"
 
                 <!-- Debug --> <!-- -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -->
-
-                <!-- Turn off before production --> <!-- -Dco.paralleluniverse.fibers.verifyInstrumentation=true -->
-                -Dco.paralleluniverse.fibers.disableAgentWarning
               </cargo.jvmargs>
               <cargo.servlet.port>${dollar}{servlet.port}</cargo.servlet.port>
             </properties>
@@ -418,17 +335,6 @@
                   <dependencies>
                       <!-- Will copy into common/lib, stuff shared by both server and apps -->
                     <dependency>
-                      <groupId>co.paralleluniverse</groupId>
-                      <artifactId>comsat-tomcat-loader</artifactId>
-#if ($javaVersion == "1.8")
-                      <classifier>jdk8</classifier>
-#end
-                    </dependency>
-                    <dependency>
-                      <groupId>co.paralleluniverse</groupId>
-                      <artifactId>comsat-jdbc</artifactId>
-                    </dependency>
-                    <dependency>
                       <groupId>com.h2database</groupId>
                       <artifactId>h2</artifactId>
                     </dependency>
@@ -470,17 +376,6 @@
                   <dependencies>
                     <!-- Will copy into common/lib, stuff shared by both server and apps -->
                     <dependency>
-                      <groupId>co.paralleluniverse</groupId>
-                      <artifactId>comsat-tomcat-loader</artifactId>
-#if ($javaVersion == "1.8")
-                      <classifier>jdk8</classifier>
-#end
-                    </dependency>
-                    <dependency>
-                      <groupId>co.paralleluniverse</groupId>
-                      <artifactId>comsat-jdbc</artifactId>
-                    </dependency>
-                    <dependency>
                       <groupId>com.h2database</groupId>
                       <artifactId>h2</artifactId>
                     </dependency>
@@ -512,14 +407,7 @@
       </build>
 
       <!-- Restore 1.x Jersey and JAX-RS for Dropwizard -->
-      <!-- IMPORTANT: must be listed _before_ dropwizard-core -->
       <dependencies>
-        <dependency>
-          <groupId>co.paralleluniverse</groupId>
-          <artifactId>comsat-dropwizard</artifactId>
-          <version>0.3.0</version>
-        </dependency>
-
         <dependency>
           <groupId>io.dropwizard</groupId>
           <artifactId>dropwizard-core</artifactId>
