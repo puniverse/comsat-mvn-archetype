@@ -123,7 +123,8 @@ public class Main extends FiberApplication<Main.JModernConfiguration> {
             try (Handle h = idbi.open()) {
                 h.execute("create table something (id int primary key auto_increment, name varchar(100))");
                 String[] names = { "Gigantic", "Bone Machine", "Hey", "Cactus" };
-                Arrays.stream(names).forEach(name -> h.insert("insert into something (name) values (?)", name));
+                for (int i = 0 ; i < names.length ; i++)
+                    h.insert("insert into something (name) values (?)", names[i]);
             }
         }
 
@@ -150,13 +151,13 @@ public class Main extends FiberApplication<Main.JModernConfiguration> {
     public interface ModernDAO {
         @SqlUpdate("insert into something (name) values (:name)")
         @GetGeneratedKeys
-        int insert(@Bind("name") String name);
+        int insert(@Bind("name") String name) throws SuspendExecution;
 
         @SqlQuery("select * from something where id = :id")
-        Something findById(@Bind("id") int id);
+        Something findById(@Bind("id") int id) throws SuspendExecution;
 
         @SqlQuery("select * from something")
-        List<Something> all();
+        List<Something> all() throws SuspendExecution;
     }
 
     public static class Something {
