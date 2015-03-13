@@ -4,9 +4,6 @@ import com.codahale.metrics.*;
 import com.codahale.metrics.annotation.*;
 import com.fasterxml.jackson.annotation.*;
 import com.google.common.base.Optional;
-import dagger.Module;
-import dagger.ObjectGraph;
-import dagger.Provides;
 import feign.Feign;
 import feign.jackson.*;
 import feign.jaxrs.*;
@@ -17,8 +14,6 @@ import java.sql.*;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
-import javax.inject.Inject;
-import javax.inject.Named;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
@@ -42,8 +37,7 @@ public class Main extends io.dropwizard.Application<Main.JModernConfiguration> {
     public void run(JModernConfiguration cfg, Environment env) throws ClassNotFoundException {
         JmxReporter.forRegistry(env.metrics()).build().start(); // Manually add JMX reporting (Dropwizard regression)
 
-        ObjectGraph objectGraph = ObjectGraph.create(new ModernModule(cfg));
-        env.jersey().register(objectGraph.get(HelloWorldResource.class));
+        env.jersey().register(new HelloWorldResource(cfg.getTemplate(), cfg.getDefaultName()));
 
         Feign.Builder feignBuilder = Feign.builder()
                 .contract(new JAXRSModule.JAXRSContract())
@@ -71,10 +65,14 @@ public class Main extends io.dropwizard.Application<Main.JModernConfiguration> {
     @Produces(MediaType.APPLICATION_JSON)
     public static class HelloWorldResource {
         private final AtomicLong counter = new AtomicLong();
-        @Inject @Named("template") String template;
-        @Inject @Named("defaultName") String defaultName;
 
-        HelloWorldResource() {}
+        private final String template;
+        private final String defaultName;
+
+        HelloWorldResource(final String template, final String defaultName) {
+            this.template = template;
+            this.defaultName = defaultName;
+        }
 
         @Timed // monitor timing of this service with Metrics
         @GET
@@ -102,7 +100,7 @@ public class Main extends io.dropwizard.Application<Main.JModernConfiguration> {
         @GET
         public String consume() {
             Saying saying = helloWorld.hi("consumer");
-            return String.format("The service is saying: %s (id: %d)",  saying.getContent(), saying.getId());
+            return String.format("The service is saying: %s (id: %d)", saying.getContent(), saying.getId());
         }
     }
 
@@ -117,7 +115,8 @@ public class Main extends io.dropwizard.Application<Main.JModernConfiguration> {
             try (Handle h = idbi.open()) {
                 h.execute("create table something (id int primary key auto_increment, name varchar(100))");
                 String[] names = { "Gigantic", "Bone Machine", "Hey", "Cactus" };
-                Arrays.stream(names).forEach(name -> h.insert("insert into something (name) values (?)", name));
+                for (int i = 0 ; i < names.length ; i++)
+                    h.insert("insert into something (name) values (?)", names[i]);
             }
         }
 
@@ -191,23 +190,5 @@ public class Main extends io.dropwizard.Application<Main.JModernConfiguration> {
 
         @JsonProperty public long getId() { return id; }
         @JsonProperty public String getContent() { return content; }
-    }
-
-    @Module(injects = HelloWorldResource.class)
-    public static class ModernModule {
-        private final JModernConfiguration cfg;
-
-        public ModernModule(JModernConfiguration cfg) {
-            this.cfg = cfg;
-        }
-
-        @Provides @Named("template") String provideTemplate() {
-            return cfg.getTemplate();
-        }
-
-        @Provides
-        @Named("defaultName") String provideDefaultName() {
-            return cfg.getDefaultName();
-        }
     }
 }

@@ -9,7 +9,7 @@ git clone https://github.com/puniverse/comsat-mvn-archetype
 cd comsat-mvn-archetype
 mvn install
 cd ..
-mvn archetype:generate -DarchetypeGroupId=co.paralleluniverse -DarchetypeArtifactId=comsat-mvn-archetype -DarchetypeVersion=0.1.2 -DgroupId=testgrp -DartifactId=testprj
+mvn archetype:generate -DarchetypeGroupId=co.paralleluniverse -DarchetypeArtifactId=comsat-mvn-archetype -DarchetypeVersion=0.1.3-SNAPSHOT -DgroupId=testgrp -DartifactId=testprj
 cd testprj
 mvn -Ptomcat7x dependency:properties clean verify
 mvn -Ptomcat7x dependency:properties package cargo:run # CTRL+C to stop

@@ -27,19 +27,6 @@
     </dependency>
 
     <dependency>
-      <groupId>com.squareup.dagger</groupId>
-      <artifactId>dagger</artifactId>
-      <version>1.2.2</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.squareup.dagger</groupId>
-      <artifactId>dagger-compiler</artifactId>
-      <version>1.2.2</version>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
       <groupId>org.glassfish.jersey.core</groupId>
       <artifactId>jersey-server</artifactId>
       <version>2.13</version>
@@ -54,26 +41,7 @@
     <dependency>
       <groupId>io.dropwizard</groupId>
       <artifactId>dropwizard-core</artifactId>
-      <version>0.7.1</version>
-      <!-- Exclude Jersey 1.x's runtime by default, Tomcat uses 2.x -->
-      <exclusions>
-        <exclusion>
-          <groupId>com.sun.jersey</groupId>
-          <artifactId>jersey-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.sun.jersey</groupId>
-          <artifactId>jersey-server</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.sun.jersey</groupId>
-          <artifactId>jersey-servlet</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.sun.jersey</groupId>
-          <artifactId>jersey-client</artifactId>
-        </exclusion>
-      </exclusions>
+      <version>0.8.0</version>
     </dependency>
 
     <dependency>
@@ -115,7 +83,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.9</version>
+      <version>1.7.10</version>
     </dependency>
 
     <dependency>
@@ -127,14 +95,19 @@
     <dependency>
       <groupId>org.glassfish.jersey.media</groupId>
       <artifactId>jersey-media-json-jackson</artifactId>
-      <version>2.13</version>
+      <version>2.16</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.5.1</version>
     </dependency>
 
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
       <version>3.0.1</version>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -405,15 +378,6 @@
       <build>
         <testResources></testResources>
       </build>
-
-      <!-- Restore 1.x Jersey and JAX-RS for Dropwizard -->
-      <dependencies>
-        <dependency>
-          <groupId>io.dropwizard</groupId>
-          <artifactId>dropwizard-core</artifactId>
-          <version>0.7.1</version>
-        </dependency>
-      </dependencies>
     </profile>
   </profiles>
 </project>
