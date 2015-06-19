@@ -44,7 +44,7 @@ public class Main extends FiberApplication<Main.JModernConfiguration> {
         env.jersey().register(new HelloWorldResource(cfg.getTemplate(), cfg.getDefaultName()));
 
         Feign.Builder feignBuilder = Feign.builder()
-                .contract(new JAXRSModule.JAXRSContract())
+                .contract(new JAXRSContract())
                 .encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder());
         env.jersey().register(new ConsumerResource(feignBuilder));
@@ -169,6 +169,7 @@ public class Main extends FiberApplication<Main.JModernConfiguration> {
     }
 
     public static class SomethingMapper implements ResultSetMapper<Something> {
+        @Suspendable
         public Something map(int index, ResultSet r, StatementContext ctx) throws SQLException {
             return new Something(r.getInt("id"), r.getString("name"));
         }

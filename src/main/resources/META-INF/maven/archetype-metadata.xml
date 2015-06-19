@@ -6,16 +6,16 @@
             <defaultValue>1.7</defaultValue>
         </requiredProperty>
         <requiredProperty key="quasarVersion">
-            <defaultValue>0.7.0</defaultValue>
+            <defaultValue>0.7.1-SNAPSHOT</defaultValue>
         </requiredProperty>
         <requiredProperty key="comsatVersion">
             <defaultValue>0.4.0-SNAPSHOT</defaultValue>
         </requiredProperty>
         <requiredProperty key="tomcat7Version">
-            <defaultValue>7.0.59</defaultValue>
+            <defaultValue>7.0.62</defaultValue>
         </requiredProperty>
         <requiredProperty key="tomcat8Version">
-            <defaultValue>8.0.20</defaultValue>
+            <defaultValue>8.0.21</defaultValue>
         </requiredProperty>
         <requiredProperty key="useWebXml">
             <defaultValue>true</defaultValue>
