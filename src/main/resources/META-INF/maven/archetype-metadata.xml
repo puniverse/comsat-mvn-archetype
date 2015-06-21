@@ -15,7 +15,7 @@
             <defaultValue>7.0.62</defaultValue>
         </requiredProperty>
         <requiredProperty key="tomcat8Version">
-            <defaultValue>8.0.21</defaultValue>
+            <defaultValue>8.0.23</defaultValue>
         </requiredProperty>
         <requiredProperty key="useWebXml">
             <defaultValue>true</defaultValue>
