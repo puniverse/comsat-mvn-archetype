@@ -6,7 +6,7 @@
             <defaultValue>1.7</defaultValue>
         </requiredProperty>
         <requiredProperty key="quasarVersion">
-            <defaultValue>0.7.1-SNAPSHOT</defaultValue>
+            <defaultValue>0.7.2</defaultValue>
         </requiredProperty>
         <requiredProperty key="comsatVersion">
             <defaultValue>0.4.0-SNAPSHOT</defaultValue>
