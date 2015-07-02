@@ -40,7 +40,7 @@ public class Main extends io.dropwizard.Application<Main.JModernConfiguration> {
         env.jersey().register(new HelloWorldResource(cfg.getTemplate(), cfg.getDefaultName()));
 
         Feign.Builder feignBuilder = Feign.builder()
-                .contract(new JAXRSModule.JAXRSContract())
+                .contract(new JAXRSContract())
                 .encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder());
         env.jersey().register(new ConsumerResource(feignBuilder));
